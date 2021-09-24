@@ -14,6 +14,7 @@ export const routes = [
     element: <PokemonDetail />,
   },
   { path: "/my-pokemon", element: <MyPokemonList /> },
+  { path: "/my-pokemon/:name/:id", element: <PokemonDetail /> },
   {
     path: "*",
     element: <NotFound />,

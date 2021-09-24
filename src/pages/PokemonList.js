@@ -1,57 +1,81 @@
-import { gql, useQuery } from "@apollo/client";
-import { useEffect } from "react";
-import LayoutDefault from "../layouts/LayoutDefault";
-import { Link } from "react-router-dom";
-import pokeBall from "../assets/pokeball.svg";
-import Loading from "../components/Loading";
-
-const GET_POKEMONS = gql`
-  query pokemons($limit: Int, $offset: Int) {
-    pokemons(limit: $limit, offset: $offset) {
-      count
-      next
-      previous
-      status
-      message
-      results {
-        url
-        name
-        image
-      }
-    }
-  }
-`;
-
-const gqlVariables = {
-  limit: 2,
-  offset: 1,
-};
+/** @jsxImportSource @emotion/react */
+import { useQuery } from "@apollo/client";
+import { GET_POKEMONS } from "../utils/graphql/queries";
+import Header from "../components/layouts/Header";
+import { css } from "@emotion/react";
+import PokemonListCard from "../components/PokemonListCard";
+import { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { unionBy } from "lodash";
 
 function PokemonList() {
-  const { loading, error, data } = useQuery(GET_POKEMONS, {
-    variables: gqlVariables,
+  const [pokemons, setPokemons] = useState([]);
+  const [metaPage, setMetaPage] = useState({
+    limit: 24,
+    offset: 0,
+  });
+
+  const {
+    refetch: pokemonListRefetch,
+    loading: pokemonListLoading,
+    data: pokemonListData,
+  } = useQuery(GET_POKEMONS, {
+    variables: metaPage,
   });
 
   useEffect(() => {
-    console.log(loading);
-    console.log(data);
-    console.log(error);
-  });
+    setPokemons(
+      unionBy(
+        pokemons,
+        pokemonListData?.pokemons?.results || [],
+        ({ id }) => id
+      )
+    );
+    //eslint-disable-next-line
+  }, [pokemonListData]);
+
+  const getTotalPokemon = () => {
+    return pokemonListData?.pokemons?.count || 0;
+  };
+
+  const loadNextPagePokemon = () => {
+    setMetaPage((node) => ({
+      ...node,
+      offset: (node.offset += node.limit),
+    }));
+
+    pokemonListRefetch(metaPage).catch();
+  };
 
   return (
-    <LayoutDefault>
-      <div>Pokemon</div>
-
-      <hr />
-      <div style={{ width: 48, height: 48 }}>
-        <Loading />
-      </div>
-
-      <hr />
-      <Link to={"/asda/detail"}>Detail</Link>
-      <Link to={"/my-pokemon"}>My Pokemon</Link>
-    </LayoutDefault>
+    <>
+      <Header />
+      {pokemonListLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <InfiniteScroll
+          dataLength={pokemons.length}
+          next={loadNextPagePokemon}
+          hasMore={pokemons.length < getTotalPokemon()}
+          loader={<></>}
+        >
+          <div css={pokemonList}>
+            <div css={pokemonList}>
+              {pokemons.map((pokemon) => (
+                <PokemonListCard pokemon={pokemon} key={pokemon.id} />
+              ))}
+            </div>
+          </div>
+        </InfiniteScroll>
+      )}
+    </>
   );
 }
+
+const pokemonList = css`
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: 1fr 1fr;
+`;
 
 export default PokemonList;

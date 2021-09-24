@@ -1,7 +1,12 @@
-import LayoutDefault from "../layouts/LayoutDefault";
+import Header from "../components/layouts/Header";
 
 function MyPokemonList() {
-  return <LayoutDefault>My Pokemon</LayoutDefault>;
+  return (
+    <>
+      <Header />
+      My Pokemon
+    </>
+  );
 }
 
 export default MyPokemonList;

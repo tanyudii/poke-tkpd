@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css, keyframes } from "@emotion/react";
-import pokeBall from "../assets/pokeball.svg";
+import pokeBall from "../../assets/pokeball.svg";
 
 function Loading() {
   return (
