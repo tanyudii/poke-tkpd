@@ -17,7 +17,7 @@ function LoadingEgg(props) {
     setHasInitialize(true);
 
     const pokeball = document.querySelector("svg");
-    const isResolved = Math.random() > 1;
+    const isResolved = Math.random() > 0.5;
     let isFetched = false;
 
     function handleIteration() {

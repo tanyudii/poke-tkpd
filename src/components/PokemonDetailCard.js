@@ -435,7 +435,7 @@ const pokemonDetail = css`
       display: flex;
       flex-wrap: wrap;
       grid-gap: 8px;
-      max-height: 280px;
+      max-height: 300px;
       -ms-overflow-style: none; /* for Internet Explorer, Edge */
       scrollbar-width: none; /* for Firefox */
       overflow-y: scroll;
