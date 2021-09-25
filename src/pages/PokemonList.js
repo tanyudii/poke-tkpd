@@ -70,8 +70,9 @@ function PokemonList() {
               {pokemons.map((pokemon, index) => (
                 <PokemonListCard
                   pokemon={pokemon}
+                  name={pokemon.name}
+                  image={pokemon.artwork}
                   key={pokemon.id}
-                  owned={index % 2 === 0 ? 1 : 0}
                 />
               ))}
             </div>

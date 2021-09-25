@@ -9,7 +9,7 @@ import Header from "../components/layouts/Header";
 import { mq } from "../utils/constant";
 
 function PokemonDetail() {
-  const { name } = useParams();
+  const { name, id: username = null } = useParams();
   const { loading: pokemonLoading, data: pokemonData } = useQuery(GET_POKEMON, {
     variables: { name },
   });
@@ -25,7 +25,10 @@ function PokemonDetail() {
           {pokemonLoading ? (
             <Loading />
           ) : (
-            <PokemonDetailCard pokemon={pokemonData.pokemon} />
+            <PokemonDetailCard
+              pokemon={pokemonData.pokemon}
+              pokemonUsername={username}
+            />
           )}
         </div>
       </div>
@@ -42,7 +45,7 @@ const headerWrapper = css`
 `;
 
 const pokemonCardWrapper = css`
-  min-height: 90vh;
+  min-height: 93vh;
   display: grid;
   place-items: center center;
 `;

@@ -1,18 +1,82 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import leftIcon from "../assets/left-icon.svg";
 import pokeball from "../assets/pokeball.svg";
+import renameIcon from "../assets/rename-icon.png";
+import releaseIcon from "../assets/release-icon.png";
 import PokemonGotcha from "./PokemonGotcha";
+import { mq } from "../utils/constant";
+import db from "../utils/db";
+import { useNavigate } from "react-router";
+import { Modal } from "react-bootstrap";
 
 function PokemonDetailCard(props) {
-  const { pokemon } = props;
+  const { pokemon, pokemonUsername: currentUsername = null } = props;
+  const navigate = useNavigate();
 
-  const [showGotcha, setShowGotcha] = useState(true);
+  const [pokemonUsername, setPokemonUsername] = useState(currentUsername);
+  const [showGotcha, setShowGotcha] = useState(false);
+
+  const [showModal, setModal] = useState(false);
+  const setShowModal = () => setModal(true);
+  const setHideModal = () => setModal(false);
+
+  const [username, setUsername] = useState(pokemonUsername);
+  const [error, setError] = useState("");
+
+  const handleBack = () => navigate(-1);
 
   const catchPokemon = () => {
     setShowGotcha(true);
+  };
+
+  const releasePokemon = async () => {
+    await db
+      .collection("pokemons")
+      .doc({ username: pokemonUsername })
+      .delete()
+      .then(() => {
+        navigate("/my-pokemon");
+      });
+  };
+
+  const handleSave = () => {
+    storeToDatabase({
+      ...pokemon,
+      username: username,
+    }).catch();
+  };
+
+  const storeToDatabase = async (pokemonData) => {
+    const { username } = pokemonData;
+
+    let currentPokemon = null;
+
+    try {
+      currentPokemon = await db
+        .collection("pokemons")
+        .doc({ username })
+        .limit(1)
+        .get();
+    } catch (e) {}
+
+    if (!currentPokemon) {
+      await db
+        .collection("pokemons")
+        .doc({ username: pokemonUsername })
+        .update(pokemonData)
+        .then(() => {
+          setPokemonUsername(username);
+          setHideModal();
+          navigate(`/${pokemon.name}/detail/${username}`);
+        })
+        .catch(() => {
+          setError("Nama tidak ditemukan");
+        });
+    } else {
+      setError("Nama telah digunakan oleh " + currentPokemon.name);
+    }
   };
 
   return (
@@ -22,21 +86,21 @@ function PokemonDetailCard(props) {
       ) : (
         <div css={pokemonCardWrapper}>
           <div css={pokemonCard}>
-            <div css={actionWrapper}>
-              <Link to={"/"}>
-                <img
-                  className={"back-icon"}
-                  src={leftIcon}
-                  width={25}
-                  alt="back"
-                />
-              </Link>
+            <div css={actionWrapper} onClick={handleBack}>
+              <img
+                className={"back-icon"}
+                src={leftIcon}
+                width={25}
+                alt="back"
+              />
             </div>
 
             <div css={pokemonPicture}>
               <div className={"detail-section"}>
                 <div>
-                  <span className={"name"}>{pokemon.name}</span>
+                  <span className={"name"}>
+                    {pokemonUsername || pokemon.name}
+                  </span>
                   <div className={"type-items"}>
                     {pokemon.types.map(({ type }, index) => (
                       <span className={`type-item ${type.name}`} key={index}>
@@ -61,12 +125,29 @@ function PokemonDetailCard(props) {
             </div>
 
             <div css={pokemonDetail}>
-              <div css={catchWrapper} onClick={catchPokemon}>
-                <div className={"catch-action"}>
-                  <img src={pokeball} alt="pokeball" />
-                  <span>Catch</span>
+              {!pokemonUsername ? (
+                <div css={catchWrapper} onClick={catchPokemon}>
+                  <div className={"catch-action"}>
+                    <img src={pokeball} alt="pokeball" />
+                    <span>Catch</span>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div css={releaseRenameWrapper}>
+                  <div css={renameWrapper} onClick={setShowModal}>
+                    <div className={"rename-action"}>
+                      <img src={renameIcon} alt="pokeball" />
+                      <span>Rename</span>
+                    </div>
+                  </div>
+                  <div css={releaseWrapper} onClick={releasePokemon}>
+                    <div className={"release-action"}>
+                      <img src={releaseIcon} alt="pokeball" />
+                      <span>Release</span>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className={"section-moves"}>
                 <p className={"h6 font-weight-bold"}>Moves:</p>
@@ -82,6 +163,33 @@ function PokemonDetailCard(props) {
           </div>
         </div>
       )}
+
+      <Modal centered show={showModal} onHide={setHideModal}>
+        <Modal.Body>
+          <div css={formModalWrapper}>
+            <div css={formModal}>
+              <input
+                type="text"
+                placeholder={"Name of Pokémon"}
+                className={`form-control font-weight-bold ${
+                  !!error ? "is-invalid" : ""
+                }`}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <div className="invalid-feedback">{error}</div>
+            </div>
+            <div css={modalActionWrapper}>
+              <div css={button} onClick={setHideModal}>
+                Cancel
+              </div>
+              <div css={button} className="bg-primary" onClick={handleSave}>
+                Rename
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </>
   );
 }
@@ -90,7 +198,12 @@ const pokemonCardWrapper = css`
   background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0 2px 7px rgb(41 52 76 / 20%);
   backdrop-filter: blur(10px);
-  border-radius: 8px;
+  min-height: 100vh;
+
+  ${mq[0]} {
+    min-height: unset;
+    border-radius: 8px;
+  }
 `;
 
 const pokemonCard = css`
@@ -103,6 +216,7 @@ const pokemonCard = css`
 const actionWrapper = css`
   display: flex;
   flex-direction: row;
+  cursor: pointer;
 `;
 
 const pokemonPicture = css`
@@ -241,6 +355,75 @@ const catchWrapper = css`
   }
 `;
 
+const releaseRenameWrapper = css`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  grid-gap: 8px;
+  margin: 16px -16px;
+  padding: 12px;
+  background: var(--white);
+  cursor: pointer;
+`;
+
+const releaseWrapper = css`
+  &:hover {
+    .release-action {
+      transform: scale(1.1);
+    }
+  }
+
+  .release-action {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    grid-gap: 8px;
+    transition: transform 0.3s;
+
+    img {
+      height: 35px;
+    }
+
+    span {
+      font-size: 28px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  }
+`;
+
+const renameWrapper = css`
+  background: var(--white);
+  cursor: pointer;
+
+  &:hover {
+    .rename-action {
+      transform: scale(1.1);
+    }
+  }
+
+  .rename-action {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    grid-gap: 8px;
+    transition: transform 0.3s;
+
+    img {
+      height: 40px;
+    }
+
+    span {
+      font-size: 28px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  }
+`;
+
 const pokemonDetail = css`
   .section-moves {
     .move-title {
@@ -270,6 +453,43 @@ const pokemonDetail = css`
         text-transform: capitalize;
       }
     }
+  }
+`;
+
+const modalActionWrapper = css`
+  display: flex;
+  flex-direction: row;
+  grid-gap: 12px;
+  margin-top: 12px;
+`;
+
+const formModalWrapper = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const formModal = css`
+  width: 100%;
+`;
+
+const button = css`
+  display: grid;
+  place-items: center center;
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 150px;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  background: var(--secondary);
+  text-transform: uppercase;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.1);
   }
 `;
 

@@ -9,12 +9,12 @@ export const routes = [
     path: "/",
     element: <PokemonList />,
   },
+  { path: "/my-pokemon", element: <MyPokemonList /> },
   {
     path: "/:name/detail",
     element: <PokemonDetail />,
   },
-  { path: "/my-pokemon", element: <MyPokemonList /> },
-  { path: "/my-pokemon/:name/:id", element: <PokemonDetail /> },
+  { path: ":name/detail/:id", element: <PokemonDetail /> },
   {
     path: "*",
     element: <NotFound />,

@@ -5,24 +5,24 @@ import pokeballOutline from "../assets/pokeball-outline.svg";
 import { Lazy } from "react-lazy";
 
 function PokemonListCard(props) {
-  const { pokemon } = props;
+  const { pokemon, image, name, pokemonUsername = null } = props;
   return (
-    <Link to={`/${pokemon.name}/detail`}>
+    <Link
+      to={`/${pokemon.name}/detail${
+        pokemonUsername ? `/${pokemonUsername}` : ""
+      }`}
+    >
       <div css={pokemonCardWrapper}>
         <img className={"img-backdrop"} src={pokeballOutline} alt="pokeball" />
 
         <div css={pokemonCardArtwork}>
           <Lazy ltIE9>
-            <img
-              className={"pokemon-picture"}
-              src={pokemon.artwork}
-              alt={pokemon.name}
-            />
+            <img className={"pokemon-picture"} src={image} alt={pokemon.name} />
           </Lazy>
         </div>
         <div css={pokemonDetailWrapper}>
           <span className={"id"}>#{String(pokemon.id).padStart(3, "0")}</span>
-          <h6 className={"name"}>{pokemon.name}</h6>
+          <h6 className={"name"}>{name}</h6>
         </div>
       </div>
     </Link>
@@ -80,6 +80,10 @@ const pokemonDetailWrapper = css`
   }
 
   .name {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 120px;
+    text-overflow: ellipsis;
     text-transform: capitalize;
     color: var(--orange);
   }
