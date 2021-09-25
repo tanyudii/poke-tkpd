@@ -24,6 +24,9 @@ export const GET_POKEMON = gql`
     pokemon(name: $name) {
       id
       name
+      species {
+        name
+      }
       sprites {
         front_default
       }

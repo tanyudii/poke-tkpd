@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 const client = new ApolloClient({
   uri: "https://graphql-pokeapi.vercel.app/api/graphql",
@@ -20,6 +21,8 @@ ReactDOM.render(
   </ApolloProvider>,
   document.getElementById("root")
 );
+
+serviceWorkerRegistration.register();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

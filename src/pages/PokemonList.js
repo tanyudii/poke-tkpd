@@ -2,24 +2,24 @@
 import { useQuery } from "@apollo/client";
 import { GET_POKEMONS } from "../utils/graphql/queries";
 import Header from "../components/layouts/Header";
-import Navigation from "../components/layouts/Navigation";
 import { css } from "@emotion/react";
 import PokemonListCard from "../components/PokemonListCard";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { unionBy } from "lodash";
+import Loading from "../components/common/Loading";
+import { mq } from "../utils/constant";
 
 function PokemonList() {
   const [pokemons, setPokemons] = useState([]);
   const [metaPage, setMetaPage] = useState({
-    limit: 24,
+    limit: 42,
     offset: 0,
   });
 
   const {
     refetch: pokemonListRefetch,
     loading: pokemonListLoading,
-    errors,
     data: pokemonListData,
   } = useQuery(GET_POKEMONS, {
     variables: metaPage,
@@ -53,35 +53,57 @@ function PokemonList() {
     <>
       <Header />
 
-      {pokemonListLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <InfiniteScroll
-          dataLength={pokemons.length}
-          next={loadNextPagePokemon}
-          hasMore={pokemons.length < getTotalPokemon()}
-          useWindow={false}
-          loader={<></>}
-        >
-          <div css={pokemonList}>
-            {pokemons.map((pokemon) => (
-              <PokemonListCard pokemon={pokemon} key={pokemon.id} />
-            ))}
+      <div css={pokemonListWrapper}>
+        {pokemonListLoading ? (
+          <div css={loadingWrapper}>
+            <Loading />
           </div>
-        </InfiniteScroll>
-      )}
-
-      <Navigation />
+        ) : (
+          <InfiniteScroll
+            dataLength={pokemons.length}
+            next={loadNextPagePokemon}
+            hasMore={pokemons.length < getTotalPokemon()}
+            useWindow={false}
+            loader={<></>}
+          >
+            <div css={pokemonList}>
+              {pokemons.map((pokemon, index) => (
+                <PokemonListCard
+                  pokemon={pokemon}
+                  key={pokemon.id}
+                  owned={index % 2 === 0 ? 1 : 0}
+                />
+              ))}
+            </div>
+          </InfiniteScroll>
+        )}
+      </div>
     </>
   );
 }
 
+const pokemonListWrapper = css`
+  padding: 16px;
+`;
+
+const loadingWrapper = css`
+  min-height: 80vh;
+  display: grid;
+  place-items: center center;
+`;
+
 const pokemonList = css`
-  width: 100vw;
   display: grid;
   grid-gap: 16px;
-  padding: 16px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  ${mq[0]} {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  ${mq[1]} {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
 `;
 
 export default PokemonList;

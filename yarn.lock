@@ -1577,6 +1577,15 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.10.1.tgz#728ecd95ab207aab8a9a4e421f0422db329232be"
   integrity sha512-HnUhk1Sy9IuKrxEMdIRCxpIqPw6BFsbYSEUO9p/hNw5sMld/+3OLMWQP80F8/db9qsv3qUjs7ZR5bS/R+iinXw==
 
+"@researchgate/react-intersection-observer@^0.7.3":
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/@researchgate/react-intersection-observer/-/react-intersection-observer-0.7.4.tgz#9360274611beebd801e3c068294ddf2ab0d4b163"
+  integrity sha512-4F291saKAP9I25Qe1ePflvm1DLLA43GlBIZfpMFYWofph7CAm+19nT8xwkQqSszg4PwZa5BpkaI4tAEJHtlj3w==
+  dependencies:
+    invariant "^2.2.2"
+    prop-types "^15.6.0"
+    warning "^3.0.0"
+
 "@restart/context@^2.1.4":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@restart/context/-/context-2.1.4.tgz#a99d87c299a34c28bd85bb489cb07bfd23149c02"
@@ -6072,7 +6081,7 @@ internal-slot@^1.0.3:
     has "^1.0.3"
     side-channel "^1.0.4"
 
-invariant@^2.2.4:
+invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -9161,7 +9170,7 @@ prop-types-extra@^1.1.0:
     react-is "^16.3.2"
     warning "^4.0.0"
 
-prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -9420,6 +9429,13 @@ react-is@^17.0.1:
   version "17.0.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
   integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
+
+react-lazy@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-lazy/-/react-lazy-1.1.0.tgz#4b277b12b2c61e9aa6c60877fd83e7b816591a22"
+  integrity sha512-p0eyneNFYnmAJsJnnYJJ/T+FJ54+7avHSs43Q2OZNHaLuNQVr1D4QQxoStC8rc4mzWzTyU/cS6kjAHn6+Rhbyw==
+  dependencies:
+    "@researchgate/react-intersection-observer" "^0.7.3"
 
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
@@ -11438,6 +11454,13 @@ walker@^1.0.7, walker@~1.0.5:
   integrity sha1-L3+bj9ENZ3JisYqITijRlhjgKPs=
   dependencies:
     makeerror "1.0.x"
+
+warning@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/warning/-/warning-3.0.0.tgz#32e5377cb572de4ab04753bdf8821c01ed605b7c"
+  integrity sha1-MuU3fLVy3kqwR1O9+IIcAe1gW3w=
+  dependencies:
+    loose-envify "^1.0.0"
 
 warning@^4.0.0, warning@^4.0.3:
   version "4.0.3"

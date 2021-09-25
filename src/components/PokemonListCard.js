@@ -1,17 +1,24 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { Link } from "react-router-dom";
+import pokeballOutline from "../assets/pokeball-outline.svg";
+import { Lazy } from "react-lazy";
 
 function PokemonListCard(props) {
   const { pokemon } = props;
   return (
     <Link to={`/${pokemon.name}/detail`}>
       <div css={pokemonCardWrapper}>
-        <span css={pokemonOwnedBadge} className="not-owned">
-          Not Owned
-        </span>
+        <img className={"img-backdrop"} src={pokeballOutline} alt="pokeball" />
+
         <div css={pokemonCardArtwork}>
-          <img src={pokemon.artwork} alt={pokemon.name} />
+          <Lazy ltIE9>
+            <img
+              className={"pokemon-picture"}
+              src={pokemon.artwork}
+              alt={pokemon.name}
+            />
+          </Lazy>
         </div>
         <div css={pokemonDetailWrapper}>
           <span className={"id"}>#{String(pokemon.id).padStart(3, "0")}</span>
@@ -27,16 +34,37 @@ const pokemonCardWrapper = css`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  padding: 24px 16px 8px 16px;
-  background-color: white;
+  padding: 24px 16px 4px 16px;
+  background-color: var(--white);
   border-radius: 12px;
-  box-shadow: 0px 2px 7px rgb(41 52 76 / 20%);
+  box-shadow: 0 2px 7px rgb(41 52 76 / 20%);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  &:hover {
+    .pokemon-picture {
+      transform: scale(1.3);
+    }
+  }
+
+  .img-backdrop {
+    position: absolute;
+    object-fit: cover;
+    height: 100px;
+    width: auto;
+    opacity: 0.1;
+    right: -28px;
+    bottom: -28px;
+  }
 `;
 
 const pokemonCardArtwork = css`
   text-align: center;
+
   img {
     width: 60px;
+    transition: transform 0.2s;
   }
 `;
 
@@ -44,32 +72,16 @@ const pokemonDetailWrapper = css`
   position: relative;
   display: flex;
   flex-direction: column;
-  line-height: 1.3rem;
 
   .id {
     font-size: 12px;
     color: var(--gray-dark);
+    font-weight: 600;
   }
 
   .name {
     text-transform: capitalize;
-  }
-`;
-
-const pokemonOwnedBadge = css`
-  background: var(--red);
-  color: white;
-  position: absolute;
-  font-size: 12px;
-  padding: 4px 4px;
-  right: 0;
-  top: 0;
-  border-top-right-radius: 10px;
-  border-bottom-left-radius: 10px;
-
-  &.not-owned {
-    background: var(--gray);
-    color: white;
+    color: var(--orange);
   }
 `;
 

@@ -1,3 +1,6 @@
 import Localbase from "localbase";
 
-export const db = new Localbase("poke-tpkd");
+const db = new Localbase("poke-tpkd", {});
+db.config.debug = false;
+
+export default db;

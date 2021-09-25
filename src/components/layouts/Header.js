@@ -3,23 +3,50 @@ import { css } from "@emotion/react";
 import { Link } from "react-router-dom";
 import pokemonLogo from "../../assets/pokemon-logo.svg";
 import bagIcon from "../../assets/bag-icon.svg";
-
-function BadgeMyPokemon() {
-  return <div css={badgeCounter}>3</div>;
-}
+import exploreIcon from "../../assets/explore-icon.svg";
+import { useEffect, useState } from "react";
+import db from "../../utils/db";
 
 function Header() {
+  const [totalMyPokemon, setTotalMyPokemon] = useState(0);
+
+  useEffect(() => {
+    loadData().catch();
+  }, []);
+
+  const loadData = async () => {
+    await db
+      .collection("pokemons")
+      .get()
+      .then((result) => {
+        setTotalMyPokemon(result.length);
+      });
+  };
+
   return (
     <div css={headerWrapper}>
-      <div css={headerLogoWrapper}>
+      <div>
         <Link to={"/"}>
-          <img src={pokemonLogo} alt="pokemon-logo" />
+          <img css={headerLogo} src={pokemonLogo} alt="pokemon-logo" />
         </Link>
       </div>
+
       <div css={headerActionWrapper}>
+        <Link to={"/"}>
+          <div css={exploreWrapper}>
+            <img className={"explore-icon"} src={exploreIcon} alt="bag-icon" />
+          </div>
+        </Link>
+
         <Link to={"/my-pokemon"}>
-          <BadgeMyPokemon />
-          <img src={bagIcon} alt="bag-icon" />
+          <div css={myPokemonBagWrapper}>
+            <div
+              className={`bag-counter ${totalMyPokemon > 0 ? "" : "no-data"}`}
+            >
+              {totalMyPokemon}
+            </div>
+            <img className={"bag-icon"} src={bagIcon} alt="bag-icon" />
+          </div>
         </Link>
       </div>
     </div>
@@ -31,50 +58,77 @@ const headerWrapper = css`
   position: sticky;
   top: 0;
   padding: 8px 16px;
-  z-index: 10;
+  z-index: 50;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   background-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0px 2px 7px rgb(41 52 76 / 20%);
+  box-shadow: 0 2px 7px rgb(41 52 76 / 20%);
   backdrop-filter: blur(10px);
   border-radius: 0 0 8px 8px;
 `;
 
-const headerLogoWrapper = css`
-  img {
-    width: 110px;
+const headerLogo = css`
+  transition: transform 0.2s;
+  height: 40px;
+
+  &:hover {
+    transform: scale(1.1);
   }
 `;
 
 const headerActionWrapper = css`
+  display: flex;
+  flex-direction: row;
+  grid-gap: 12px;
+`;
+
+const exploreWrapper = css`
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  .explore-icon {
+    height: 40px;
+  }
+`;
+
+const myPokemonBagWrapper = css`
   position: relative;
   transition: transform 0.2s;
 
   &:hover {
-    transform: scale(1.2);
+    transform: scale(1.1);
   }
 
-  img {
-    padding-top: 4px;
-    width: 36px;
+  .bag-icon {
+    height: 40px;
   }
-`;
 
-const badgeCounter = css`
-  text-align: center;
-  right: -2px;
-  top: 1px;
-  font-size: 12px;
-  padding: 0 4px;
-  border-radius: 6px;
-  height: 16px;
-  min-width: 8px;
-  line-height: 16px;
-  position: absolute;
-  color: white;
-  background-color: #e02954;
+  .bag-counter {
+    text-align: center;
+    right: 0;
+    top: 0;
+    font-size: 12px;
+    padding: 2px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    height: 16px;
+    min-width: 8px;
+    line-height: 16px;
+    position: absolute;
+    color: var(--white);
+    background-color: #e02954;
+
+    &.no-data {
+      display: none;
+    }
+  }
 `;
 
 export default Header;
