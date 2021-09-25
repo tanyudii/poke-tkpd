@@ -7,12 +7,15 @@ function PokemonListCard(props) {
   return (
     <Link to={`/${pokemon.name}/detail`}>
       <div css={pokemonCardWrapper}>
+        <span css={pokemonOwnedBadge} className="not-owned">
+          Not Owned
+        </span>
         <div css={pokemonCardArtwork}>
           <img src={pokemon.artwork} alt={pokemon.name} />
         </div>
         <div css={pokemonDetailWrapper}>
-          <span className={"name"}>{pokemon.name}</span>
-          <span className={"owned"}>Owned</span>
+          <span className={"id"}>#{String(pokemon.id).padStart(3, "0")}</span>
+          <h6 className={"name"}>{pokemon.name}</h6>
         </div>
       </div>
     </Link>
@@ -20,30 +23,53 @@ function PokemonListCard(props) {
 }
 
 const pokemonCardWrapper = css`
+  position: relative;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  padding: 16px;
+  padding: 24px 16px 8px 16px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0px 2px 7px rgb(41 52 76 / 20%);
 `;
 
 const pokemonCardArtwork = css`
+  text-align: center;
   img {
-    width: 120px;
+    width: 60px;
   }
 `;
 
 const pokemonDetailWrapper = css`
+  position: relative;
   display: flex;
   flex-direction: column;
-  grid-gap: 8px;
-  align-items: center;
+  line-height: 1.3rem;
+
+  .id {
+    font-size: 12px;
+    color: var(--gray-dark);
+  }
 
   .name {
     text-transform: capitalize;
   }
+`;
 
-  .owned {
-    color: red;
+const pokemonOwnedBadge = css`
+  background: var(--red);
+  color: white;
+  position: absolute;
+  font-size: 12px;
+  padding: 4px 4px;
+  right: 0;
+  top: 0;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+
+  &.not-owned {
+    background: var(--gray);
+    color: white;
   }
 `;
 

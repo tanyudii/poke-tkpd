@@ -30,23 +30,31 @@ const headerWrapper = css`
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  background: white;
   padding: 8px 16px;
+  z-index: 10;
   display: flex;
   flex-direction: row;
-  box-shadow: -7px -7px 12px 0px rgb(0 0 0);
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  background-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0px 2px 7px rgb(41 52 76 / 20%);
+  backdrop-filter: blur(10px);
+  border-radius: 0 0 8px 8px;
 `;
 
 const headerLogoWrapper = css`
   img {
-    width: 100px;
+    width: 110px;
   }
 `;
 
 const headerActionWrapper = css`
   position: relative;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.2);
+  }
 
   img {
     padding-top: 4px;

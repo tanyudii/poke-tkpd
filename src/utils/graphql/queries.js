@@ -27,6 +27,11 @@ export const GET_POKEMON = gql`
       sprites {
         front_default
       }
+      abilities {
+        ability {
+          name
+        }
+      }
       moves {
         move {
           name

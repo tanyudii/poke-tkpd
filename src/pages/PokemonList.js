@@ -2,6 +2,7 @@
 import { useQuery } from "@apollo/client";
 import { GET_POKEMONS } from "../utils/graphql/queries";
 import Header from "../components/layouts/Header";
+import Navigation from "../components/layouts/Navigation";
 import { css } from "@emotion/react";
 import PokemonListCard from "../components/PokemonListCard";
 import { useEffect, useState } from "react";
@@ -18,6 +19,7 @@ function PokemonList() {
   const {
     refetch: pokemonListRefetch,
     loading: pokemonListLoading,
+    errors,
     data: pokemonListData,
   } = useQuery(GET_POKEMONS, {
     variables: metaPage,
@@ -50,6 +52,7 @@ function PokemonList() {
   return (
     <>
       <Header />
+
       {pokemonListLoading ? (
         <div>Loading...</div>
       ) : (
@@ -57,25 +60,28 @@ function PokemonList() {
           dataLength={pokemons.length}
           next={loadNextPagePokemon}
           hasMore={pokemons.length < getTotalPokemon()}
+          useWindow={false}
           loader={<></>}
         >
           <div css={pokemonList}>
-            <div css={pokemonList}>
-              {pokemons.map((pokemon) => (
-                <PokemonListCard pokemon={pokemon} key={pokemon.id} />
-              ))}
-            </div>
+            {pokemons.map((pokemon) => (
+              <PokemonListCard pokemon={pokemon} key={pokemon.id} />
+            ))}
           </div>
         </InfiniteScroll>
       )}
+
+      <Navigation />
     </>
   );
 }
 
 const pokemonList = css`
+  width: 100vw;
   display: grid;
   grid-gap: 16px;
-  grid-template-columns: 1fr 1fr;
+  padding: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 `;
 
 export default PokemonList;
