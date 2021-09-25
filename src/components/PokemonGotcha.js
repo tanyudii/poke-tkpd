@@ -64,7 +64,7 @@ function PokemonGotcha(props) {
         {success ? (
           <>
             <div css={messageWrapper}>
-              <span className={"h3"}>Gotta catch em' all!</span>
+              <span className={"h3"}>Gotta catch them' all!</span>
             </div>
             <div css={actionWrapper}>
               <Link to={"/"}>
