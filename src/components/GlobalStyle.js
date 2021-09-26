@@ -14,6 +14,9 @@ function GlobalStyle() {
               rgba(0, 0, 0, 1) 100%
             )
             fixed;
+          min-height: 100vh;
+          /* mobile viewport bug fix */
+          min-height: -webkit-fill-available;
         }
 
         a {
