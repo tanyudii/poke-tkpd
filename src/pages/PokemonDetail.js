@@ -51,8 +51,11 @@ const pokemonCardWrapper = css`
 `;
 
 const pokemonCard = css`
-  max-width: 480px;
-  min-width: 350px;
+  min-width: 100vw;
+  
+  ${mq[0]} {
+    max-width: 480px;
+  }
 `;
 
 export default PokemonDetail;
