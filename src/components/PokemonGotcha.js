@@ -56,7 +56,7 @@ function PokemonGotcha(props) {
           navigate("/");
         });
     } else {
-      setError("Nama telah digunakan oleh " + currentPokemon.name);
+      setError("The name has already been taken by " + currentPokemon.name);
     }
   };
 
