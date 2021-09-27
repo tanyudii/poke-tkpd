@@ -54,7 +54,7 @@ const pokemonCard = css`
   width: 100vw;
 
   ${mq[0]} {
-    width: 480px;
+    width: 480px !important;
   }
 `;
 
