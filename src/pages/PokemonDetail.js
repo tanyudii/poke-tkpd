@@ -51,10 +51,10 @@ const pokemonCardWrapper = css`
 `;
 
 const pokemonCard = css`
-  min-width: 100vw;
-  
+  width: 100vw;
+
   ${mq[0]} {
-    max-width: 480px;
+    width: 480px;
   }
 `;
 
