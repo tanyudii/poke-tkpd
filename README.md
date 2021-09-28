@@ -17,6 +17,6 @@ yarn start
 - [PWA](https://web.dev/progressive-web-apps/) Progressive Web Apps
 - [Apollo](https://www.apollographql.com/) for Graphql Client
 - [Jest](https://jestjs.io/) for Javascript Test
-- 
+
 # API Of Pokemon
 > [GraphQL for PokeAPI](https://github.com/mazipan/graphql-pokeapi)
